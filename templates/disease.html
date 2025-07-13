@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Disease Symptom Predictor</title>
+    <style>
+        .symptom-button {
+            margin: 5px;
+            padding: 8px 12px;
+            background-color: lightgray;
+            border: none;
+            cursor: pointer;
+        }
+        .selected {
+            background-color: lightgreen;
+        }
+    </style>
+</head>
+<body>
+    <h1>Disease Symptom Predictor</h1>
+
+    <input type="text" id="search" placeholder="Search symptoms..." onkeyup="filterSymptoms()">
+
+    <form method="POST">
+        <div id="symptom-container">
+            {% for symptom in symptoms %}
+            <button type="button" class="symptom-button" onclick="toggleSymptom(this)" data-symptom="{{ symptom }}">{{ symptom }}</button>
+            {% endfor %}
+        </div>
+        <input type="hidden" name="selected_symptoms" id="selected_symptoms">
+        <br>
+        <button type="submit">Predict Disease</button>
+    </form>
+
+    {% if prediction %}
+        <h3>Predicted Disease: {{ prediction }}</h3>
+    {% endif %}
+
+    <script>
+        let selected = [];
+
+        function toggleSymptom(btn) {
+            const symptom = btn.getAttribute("data-symptom");
+            if (selected.includes(symptom)) {
+                selected = selected.filter(s => s !== symptom);
+                btn.classList.remove("selected");
+            } else {
+                selected.push(symptom);
+                btn.classList.add("selected");
+            }
+            document.getElementById("selected_symptoms").value = selected.join(",");
+        }
+
+        function filterSymptoms() {
+            const filter = document.getElementById("search").value.toLowerCase();
+            const buttons = document.querySelectorAll(".symptom-button");
+            buttons.forEach(btn => {
+                const text = btn.textContent.toLowerCase();
+                btn.style.display = text.includes(filter) ? "" : "none";
+            });
+        }
+    </script>
+</body>
+</html>
