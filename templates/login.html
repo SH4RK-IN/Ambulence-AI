@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+</head>
+<body>
+    <h2>Login</h2>
+
+    {% if error %}
+        <p style="color:red;">{{ error }}</p>
+    {% endif %}
+
+    <form method="POST">
+        <label>Select Role:</label>
+        <select name="role" onchange="toggleForms(this.value)">
+            <option value="ambulance">Ambulance</option>
+            <option value="doctor">Doctor</option>
+        </select>
+
+        <div id="ambulance-form">
+            <label>Ambulance No:</label><br>
+            <input type="text" name="amb_no"><br>
+            <label>Password:</label><br>
+            <input type="password" name="pasw"><br>
+        </div>
+
+        <div id="doctor-form" style="display:none;">
+            <label>Username:</label><br>
+            <input type="text" name="username"><br>
+            <label>Password:</label><br>
+            <input type="password" name="password"><br>
+        </div>
+
+        <br><button type="submit">Login</button>
+    </form>
+
+    <script>
+        function toggleForms(role) {
+            document.getElementById('ambulance-form').style.display = role === 'ambulance' ? 'block' : 'none';
+            document.getElementById('doctor-form').style.display = role === 'doctor' ? 'block' : 'none';
+        }
+    </script>
+</body>
+</html>

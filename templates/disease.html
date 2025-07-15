@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Disease Symptom Predictor</title>
+    <title>Disease Predictor</title>
     <style>
         .symptom-button {
             margin: 5px;
@@ -16,24 +16,23 @@
     </style>
 </head>
 <body>
-    <h1>Disease Symptom Predictor</h1>
+    <h2>Disease Predictor</h2>
 
     <input type="text" id="search" placeholder="Search symptoms..." onkeyup="filterSymptoms()">
 
     <form method="POST">
         <div id="symptom-container">
             {% for symptom in symptoms %}
-            <button type="button" class="symptom-button" onclick="toggleSymptom(this)" data-symptom="{{ symptom }}">{{ symptom }}</button>
+                <button type="button" class="symptom-button" onclick="toggleSymptom(this)" data-symptom="{{ symptom }}">{{ symptom }}</button>
             {% endfor %}
         </div>
         <input type="hidden" name="selected_symptoms" id="selected_symptoms">
-        <br>
-        <button type="submit">Predict Disease</button>
+        <br><button type="submit">Predict</button>
     </form>
 
-    {% if prediction %}
-        <h3>Predicted Disease: {{ prediction }}</h3>
-    {% endif %}
+    <h3 id="prediction">Loading latest prediction...</h3>
+
+    <br><a href="{{ url_for('logout') }}">Logout</a>
 
     <script>
         let selected = [];
@@ -58,6 +57,20 @@
                 btn.style.display = text.includes(filter) ? "" : "none";
             });
         }
+        function fetchPrediction() {
+            fetch('/get_prediction')
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById("prediction").innerText = "Prediction: " + data.prediction;
+                })
+                .catch(err => {
+                    document.getElementById("prediction").innerText = "Prediction: (disconnected)";
+                });
+        }
+        
+
+        setInterval(fetchPrediction, 5000);
+        fetchPrediction();
     </script>
 </body>
 </html>

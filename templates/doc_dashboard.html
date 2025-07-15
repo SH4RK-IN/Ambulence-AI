@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Doctor Dashboard</title>
+</head>
+<body>
+    <h2>Doctor Dashboard</h2>
+
+    {% for report in reports %}
+        <form method="POST">
+            <input type="hidden" name="id" value="{{ report.id }}">
+            Ambulance: {{ report.ambulance }} |
+            Symptoms: {{ report.symptoms }} |
+            <input name="new_disease" value="{{ report.prediction }}">
+            <button type="submit">Update</button>
+        </form>
+        <br>
+    {% endfor %}
+
+    <a href="{{ url_for('logout') }}">Logout</a>
+</body>
+</html>
