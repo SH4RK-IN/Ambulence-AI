@@ -6,17 +6,38 @@
 <body>
     <h2>Doctor Dashboard</h2>
 
-    {% for report in reports %}
-        <form method="POST">
-            <input type="hidden" name="id" value="{{ report.id }}">
-            Ambulance: {{ report.ambulance }} |
-            Symptoms: {{ report.symptoms }} |
-            <input name="new_disease" value="{{ report.prediction }}">
-            <button type="submit">Update</button>
-        </form>
-        <br>
-    {% endfor %}
+    <div id="reports"></div>
 
     <a href="{{ url_for('logout') }}">Logout</a>
+
+    <script>
+        function loadReports() {
+            fetch('/docupdate')
+                .then(res => res.json())
+                .then(data => {
+                    let container = document.getElementById("reports");
+                    container.innerHTML = "";
+
+                    data.forEach(report => {
+                        let form = document.createElement("form");
+                        form.method = "POST";
+                        form.innerHTML = `
+                            <input type="hidden" name="id" value="${report.id}">
+                            Ambulance: ${report.ambulance} |
+                            Symptoms: ${report.symptoms} |
+                            Time: ${report.time} |
+                            <input name="new_disease" value="${report.prediction}">
+                            <button type="submit">Update</button>
+                            <br><br>
+                        `;
+                        container.appendChild(form);
+                    });
+                });
+        }
+
+        loadReports();
+        setInterval(loadReports, 5000);
+    </script>
+
 </body>
 </html>
